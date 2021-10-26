@@ -23,7 +23,6 @@ public class Main {
             Workbook workbook = new XSSFWorkbook(fis);
             Sheet sheet01 = workbook.getSheetAt(0);
 
-
             // Fields
             int startRow = 8 - 1;
             int endRow = 90;
@@ -86,22 +85,23 @@ public class Main {
                 }
             }
 
-            //
+            // Read word-document in order to compare data
             fis = new FileInputStream(wordFile);
             XWPFDocument inputDoc = new XWPFDocument(OPCPackage.open(fis));
             List<XWPFTable> tableList;
             tableList = inputDoc.getTables();
-            XWPFTable table = tableList.get(tableList.size()-2);
+            XWPFTable table01 = tableList.get(tableList.size()-2);
+            XWPFTable table02 = tableList.get(tableList.size()-1);
 
-            for (int r = 4; r < 30; r++) {
-                XWPFTableRow row = table.getRow(r);
-                int year = Integer.parseInt(table.getRow(r).getCell(0).getText().trim());
-                for (int c = 0; c < 3; c++) {
-                    row.getCell(c).setText("45");
-                }
-                table.addRow(row,r);
-                System.out.println(r);
-            }
+//            for (int r = 4; r < 30; r++) {
+//                XWPFTableRow row = table.getRow(r);
+//                int year = Integer.parseInt(table.getRow(r).getCell(0).getText().trim());
+//                for (int c = 0; c < 3; c++) {
+//                    row.getCell(c).setText("45");
+//                }
+//                table.addRow(row,r);
+//                System.out.println(r);
+//            }
 
             System.out.println("OK");
 
