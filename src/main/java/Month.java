@@ -32,12 +32,25 @@ public class Month {
     }
 
     public int AlbanianMonthToNum(String text){
-        for (int i = 0; i < albanian.length; i++) {
-            if(text.toLowerCase().equals(albanian[i])){
-                return number[i];
+        if(text.length()>0) {
+            for (int i = 0; i < albanian.length; i++) {
+                if (text.trim().toLowerCase().equals(albanian[i])) {
+                    return number[i];
+                }
             }
         }
-        return 0;
+        return -1;
+    }
+
+    public int EnglishMonthToNum(String text){
+        if(text.length()>0) {
+            for (int i = 0; i < english.length; i++) {
+                if (text.trim().toLowerCase().equals(english[i])) {
+                    return number[i];
+                }
+            }
+        }
+        return -1;
     }
 
     public String[] getEnglish() {
