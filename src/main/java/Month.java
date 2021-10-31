@@ -8,7 +8,7 @@ public class Month {
     public Month() {
 
         number = new int[]{1,2,3,4,5,6,7,8,9,10,11,12};
-        english = new String[]{"january","february","march","april", "may", "june", "july", "august","spetember", "october", "november", "december"};
+        english = new String[]{"january","february","march","april", "may", "june", "july", "august","september", "october", "november", "december"};
         albanian = new String[]{"janar", "shkurt", "mars", "prill", "maj", "qershor", "korrik", "gusht", "shtator", "tetor", "nëntor", "dhjetor"};
         french = new String[]{"janvier","février","mars","avril", "mai", "juin", "juillet", "août","septembre", "octobre", "novembre", "décembre"};
     }
@@ -32,12 +32,25 @@ public class Month {
     }
 
     public int AlbanianMonthToNum(String text){
-        for (int i = 0; i < albanian.length; i++) {
-            if(text.toLowerCase().equals(albanian[i])){
-                return number[i];
+        if(text.length()>0) {
+            for (int i = 0; i < albanian.length; i++) {
+                if (text.trim().toLowerCase().equals(albanian[i])) {
+                    return number[i];
+                }
             }
         }
-        return 0;
+        return -1;
+    }
+
+    public int EnglishMonthToNum(String text){
+        if(text.length()>0) {
+            for (int i = 0; i < english.length; i++) {
+                if (text.trim().toLowerCase().equals(english[i])) {
+                    return number[i];
+                }
+            }
+        }
+        return -1;
     }
 
     public String[] getEnglish() {
