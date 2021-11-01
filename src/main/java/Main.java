@@ -5,11 +5,16 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.*;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.text.ParseException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.List;
+import java.util.Locale;
 
 public class Main {
 
@@ -34,14 +39,34 @@ public class Main {
             Row lastRow = sheet01.getRow(89);
             for (int c = 1; c <= fc_s01.length; c++) {
                 Cell cell = lastRow.getCell(c);
-                fc_s01[c - 1] = cell.toString();
+                if (cell.getCellType() == cell.CELL_TYPE_NUMERIC) {
+                    Double dd = cell.getNumericCellValue();
+                    BigDecimal bd = new BigDecimal(dd).setScale(1, RoundingMode.HALF_EVEN);
+                    dd = bd.doubleValue();
+                    StringBuilder sb = new StringBuilder();
+                    Formatter formatter = new Formatter(sb, Locale.US);
+                    formatter.format("%(,.1f", dd);
+                    fc_s01[c - 1] = sb.toString();
+                } else {
+                    fc_s01[c - 1] = cell.getStringCellValue();
+                }
             }
             data.add(fc_s01);
 
             lastRow = sheet02.getRow(89);
             for (int c = 1; c <= fc_s02.length; c++) {
                 Cell cell = lastRow.getCell(c);
-                fc_s02[c - 1] = cell.toString();
+                if (cell.getCellType() == cell.CELL_TYPE_NUMERIC) {
+                    Double dd = cell.getNumericCellValue();
+                    BigDecimal bd = new BigDecimal(dd).setScale(1, RoundingMode.HALF_EVEN);
+                    dd = bd.doubleValue();
+                    StringBuilder sb = new StringBuilder();
+                    Formatter formatter = new Formatter(sb, Locale.US);
+                    formatter.format("%(,.1f", dd);
+                    fc_s02[c - 1] = sb.toString();
+                } else {
+                    fc_s02[c - 1] = cell.getStringCellValue();
+                }
             }
             data.add(fc_s02);
 
@@ -74,14 +99,13 @@ public class Main {
             inputDoc.write(fout);
 
             // ********** PART II ********** //
-            boolean table01Status = compareRows(sheet01.getRow(89),tables[0].getRow(tables[0].getRows().size() - 1));
-            boolean table02Status = compareRows(sheet02.getRow(89),tables[1].getRow(tables[1].getRows().size() - 1));
-            if(table01Status && table02Status) {
+            boolean table01Status = compareRows(sheet01.getRow(89), tables[0].getRow(tables[0].getRows().size() - 1));
+            boolean table02Status = compareRows(sheet02.getRow(89), tables[1].getRow(tables[1].getRows().size() - 1));
+            if (table01Status && table02Status) {
                 System.out.println("\n [ Cell values are copied successfully! ] ");
-            }else{
+            } else {
                 System.out.println("Rows are different!");
             }
-
 
             fout.close();
             inputDoc.close();
@@ -91,19 +115,28 @@ public class Main {
     }
 
     // Compare two rows of excel and word documents directly
-    public static boolean compareRows(Row excelRow, XWPFTableRow wordRow){
-        for (int c = 2; c < wordRow.getTableCells().size() ; c++) {
-            try {
-                if (Double.parseDouble(excelRow.getCell(c).toString()) != Double.parseDouble(wordRow.getCell(c - 1).getText())) {
-                    return false;
-                }
-            }catch (Exception e){
-                if (!excelRow.getCell(c).toString().equals(wordRow.getCell(c - 1).getText())) {
-                    return false;
-                }
+    public static boolean compareRows(Row excelRow, XWPFTableRow wordRow) {
+        for (int c = 2; c < wordRow.getTableCells().size(); c++) {
+            Cell cell = excelRow.getCell(c);
+            BigDecimal bd = null;
+            Double dd = 0.0;
+            StringBuilder sb = null;
+            if (cell.getCellType() == cell.CELL_TYPE_NUMERIC) {
+                dd = cell.getNumericCellValue();
+                bd = new BigDecimal(dd).setScale(1, RoundingMode.HALF_EVEN);
+                dd = bd.doubleValue();
+                sb = new StringBuilder();
+                Formatter formatter = new Formatter(sb, Locale.US);
+                formatter.format("%(,.1f", dd);
+            }else{
+                sb = new StringBuilder(cell.getStringCellValue());
             }
-            System.out.println("Excel: " + wordRow.getCell(c - 1).getText());
-            System.out.println("Word: " + excelRow.getCell(c).toString());
+            if (!sb.toString().equals(wordRow.getCell(c - 1).getText())) {
+                return false;
+            }
+
+            System.out.println("Word: " + wordRow.getCell(c - 1).getText());
+            System.out.println("Excel: " + sb.toString());
         }
         return true;
     }
