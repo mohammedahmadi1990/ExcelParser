@@ -132,6 +132,11 @@ public class Main {
                 sb = new StringBuilder(cell.getStringCellValue());
             }
             if (!sb.toString().equals(wordRow.getCell(c - 1).getText())) {
+                XWPFTableCell wordCell = wordRow.getCell(c);
+                XWPFRun run = wordCell.addParagraph().createRun();
+                run.setText(sb.toString());
+                run.setFontSize(wordRow.getCell(1).getParagraphs().get(0).getRuns().get(0).getFontSize());
+                run.setFontFamily(wordRow.getCell(1).getParagraphs().get(0).getRuns().get(0).getFontFamily());
                 return false;
             }
 
