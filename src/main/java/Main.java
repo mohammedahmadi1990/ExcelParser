@@ -23,9 +23,9 @@ public class Main {
             // ********** PART I ********** //
 
             // Read Word-file
-            String excelFile = "C:\\Users\\Mohammed\\Desktop\\UPWORK\\BMS-Excel-Data.xlsx";
-            String wordFile = "C:\\Users\\Mohammed\\Desktop\\UPWORK\\MSB_241_en_test.docx";
-            String outPutWord = "C:\\Users\\Mohammed\\Desktop\\UPWORK\\result.docx";
+            String excelFile = "C:\\Users\\Mohammed\\Desktop\\UPWORK\\table02\\BMS-Excel-Data.xlsx";
+            String wordFile = "C:\\Users\\Mohammed\\Desktop\\UPWORK\\table02\\MSB_241_en_test.docx";
+            String outPutWord = "C:\\Users\\Mohammed\\Desktop\\UPWORK\\table02\\result.docx";
             FileInputStream fis = new FileInputStream(excelFile);
             Workbook workbook = new XSSFWorkbook(fis);
             Sheet sheet01 = workbook.getSheetAt(0);
@@ -84,7 +84,7 @@ public class Main {
                     tables) {
                 XWPFTableRow row = table.getRow(table.getRows().size() - 1);
                 XWPFTableRow sampleRow = table.getRow(table.getRows().size() - 2);
-                for (int c = 1; c < data.get(t).length; c++) {
+                for (int c = 1; c < row.getTableCells().size(); c++) {
                     XWPFTableCell cell = row.getCell(c);
                     XWPFRun run = cell.addParagraph().createRun();
                     run.setText(data.get(t)[c]);
